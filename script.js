@@ -174,6 +174,8 @@ function crossesAntimeridian(feature) {
 }
 
 function wrapToMap (feature) {
+  if (!crossesAntimeridian(feature)) return feature;
+  
   const coords = feature.geometry.coordinates[0];
 
   coords.forEach( coord => {
