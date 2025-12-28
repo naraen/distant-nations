@@ -1,0 +1,131 @@
+/* ==============================
+   GLOBAL
+============================== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ==============================
+   MAP
+============================== */
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* ==============================
+   CONTROL PANEL
+============================== */
+#controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px 14px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+#controls label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+#controls input[type="range"] {
+  width: 150px;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+#distanceValue,
+#toleranceValue {
+  font-weight: bold;
+  margin-left: 6px;
+}
+
+/* ==============================
+   CUSTOM ZOOM CONTROL
+============================== */
+.custom-zoom-control {
+  position: absolute;
+  top: 110px; /* pushed below control panel */
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.custom-zoom-control a {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  background: #f8f8f8;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.custom-zoom-control a:hover {
+  background: #007bff;
+  color: #ffffff;
+}
+
+.custom-zoom-control .zoom-display {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  background: #007bff;
+  color: #ffffff;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  user-select: none;
+}
+
+/* ==============================
+   GRATICULE LABELS
+============================== */
+.lat-label {
+  font-size: 12px;
+  color: #222;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 600px) {
+  #controls {
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .custom-zoom-control {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 130px;
+  }
+}

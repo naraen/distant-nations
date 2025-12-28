@@ -1,0 +1,80 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Equator",
+        "label": "Equator (0°)",
+        "type": "equator"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-180, 0],
+          [180, 0]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tropic of Cancer",
+        "label": "Tropic of Cancer (23.4° N)",
+        "type": "tropic"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-180, 23.436],
+          [180, 23.436]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tropic of Capricorn",
+        "label": "Tropic of Capricorn (23.4° S)",
+        "type": "tropic"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-180, -23.436],
+          [180, -23.436]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arctic Circle",
+        "label": "Arctic Circle (66.6° N)",
+        "type": "polar"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-180, 66.563],
+          [180, 66.563]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Antarctic Circle",
+        "label": "Antarctic Circle (66.6° S)",
+        "type": "polar"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-180, -66.563],
+          [180, -66.563]
+        ]
+      }
+    }
+  ]
+}

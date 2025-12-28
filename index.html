@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Countries at Distance</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Controls panel -->
+  <div id="controls">
+    <label>
+      Distance (km) :
+      <input type="range" id="distanceSlider" min="500" max="14000" step="500" value="1000">
+      <span id="distanceValue"></span> km
+    </label>
+
+    <label>
+      Tolerance (± km):
+      <input type="range" id="toleranceSlider" min="10" max="1000" step="5" value="10">
+      <span id="toleranceValue"></span> km
+    </label>
+  </div>
+
+  <!-- Leaflet map container -->
+  <div id="map"></div>
+
+  <!-- Custom zoom control -->
+  <div id="customZoomControl" class="custom-zoom-control leaflet-bar">
+    <a href="#" id="zoomIn" class="leaflet-control-zoom-in">+</a>
+    <span id="zoomDisplay" class="zoom-display">4</span>
+    <a href="#" id="zoomOut" class="leaflet-control-zoom-out">−</a>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Turf.js -->
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+  <!-- Custom JS -->
+  <script src="script.js"></script>
+</body>
+</html>
