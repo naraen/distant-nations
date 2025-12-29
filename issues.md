@@ -1,24 +1,25 @@
 Issues
 --------
 - Cannot click on Marshall Islands,  Kiribati etc.
-- increasing distance on the left edge or right edge does not expand to the other edge
--  hatch pattern for countries intersecting both rings is black in color
+- Horizontal overflow of threshold ring should on one side should wrap around to the other side.
+- Countries in the intersection of the two rings is black in color instead of a hatch pattern
 
 Wishlist
 --------
-* simplify overlays
+* Simplify overlays
   - English names only
-  - 
-* create a version of sporcle
+* Features 
+  - [x] host it somewhere
+  - [x] show lat long lines
+  - [x] should not color selected country. 
+  - [x] change this file to markdown
+* Ideas for a different application - Create a version like sporcle quiz
   - Identify a country
   - timed activity
   - Complete the game once all countries have been identified
   - use color coding to indicate UN status
   - Show missed countries in red
-* host it somewhere
-* show lat long lines
-* should not select self. 
-* change this file to markdown
+  
 
 
 Learning
