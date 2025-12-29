@@ -291,7 +291,7 @@ function updateStyles() {
 
     if (hitA && hitB) {
       layer.setStyle({
-        color: '#fff',
+        color: '#444',
         weight: 2,
         fill: 'url(#hatch-orange-purple)',
         fillOpacity: 1
