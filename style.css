@@ -70,7 +70,7 @@ body {
 ============================== */
 .custom-zoom-control {
   position: absolute;
-  top: 110px; /* pushed below control panel */
+  top: 120px; /* pushed below control panel */
   left: 10px;
   display: flex;
   flex-direction: column;
