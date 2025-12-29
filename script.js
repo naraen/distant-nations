@@ -1,8 +1,15 @@
 // ==============================
 // DOM ELEMENTS
 // ==============================
-const distanceSlider = document.getElementById('distanceSlider');
-const distanceValue = document.getElementById('distanceValue');
+const distanceSliders = [
+  document.getElementById('distanceSlider'),
+  document.getElementById('distanceSliderB')
+];
+const distanceValues = [
+  document.getElementById('distanceValue'),
+  document.getElementById('distanceValueB')
+];
+
 const toleranceSlider = document.getElementById('toleranceSlider');
 const toleranceValue = document.getElementById('toleranceValue');
 
@@ -14,12 +21,9 @@ const zoomDisplay = document.querySelector('.zoom-display');
 // MAP SETUP
 // ==============================
 const italyLatLng = [41.9028, 12.4964];
-const italyLngLat = [12.4964, 41.9028];
+let selectedCountries = [
+  ];
 
-let selectedCenterLatLng = italyLatLng;
-let selectedCenterLngLat = italyLngLat;
-let selectedCountryLayer = null;
-let thresholdLayer =null;
 
 const map = L.map('map', {
   zoomControl: false,
@@ -27,7 +31,8 @@ const map = L.map('map', {
   minZoom:2
 }).setView(italyLatLng, 4);
 
-
+let ringLayerGroup = L.layerGroup()
+  .addTo(map);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
@@ -42,8 +47,27 @@ const Styles = {
   country: {
     default: { color: '#777', weight: 1, fillOpacity: 0.1 },
     selected: { color: 'orange', weight: 3, fillOpacity: 0.3 },
+    selectedB: { color: '#8a2be2', weight: 2, fillOpacity: 0.4},
     match: { color: 'blue', weight: 2, fillOpacity: 0.4 }
   },
+  ring:[
+    {
+      color: '#ff8800',
+      weight: 2,
+      fillColor: '#ff8800',
+      fillOpacity: 0.15,
+      dashArray: '6,4',
+      interactive: false
+    },
+    {
+      color:'#8a2be2',
+      weight: 2,
+      fillColor: '#8a2be2',
+      fillOpacity: 0.15,
+      dashArray: '6,4',
+      interactive: false
+    }
+  ],
   radius: {
     color: 'red',
     fillOpacity: 0,
@@ -75,12 +99,39 @@ const Styles = {
   }
 };
 
+// ---------------------------
+// SVG hatch pattern
+// ---------------------------
+
+function addHatchPatterns(map) {
+  const svg = map.getPanes().overlayPane.querySelector('svg');
+  if (!svg) return;
+
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+  defs.innerHTML = `
+    <pattern id="hatch-orange-purple"
+             width="8" height="8"
+             patternUnits="userSpaceOnUse"
+             patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8"
+            stroke="#ff8800"
+            stroke-width="3" />
+      <line x1="4" y1="0" x2="4" y2="8"
+            stroke="#8a2be2"
+            stroke-width="3" />
+    </pattern>
+  `;
+
+  svg.insertBefore(defs, svg.firstChild);
+}
+
+map.whenReady(() => addHatchPatterns(map));
+
+
 // ==============================
 // MARKERS & LAYERS
 // ==============================
-let centerMarker = L.marker(selectedCenterLatLng)
-  .addTo(map)
-  .bindPopup('Italy');
 
 let countriesLayer;
 let countriesData;
@@ -101,18 +152,8 @@ fetch('countries.geojson')
       }
     }).addTo(map);
 
-    const defaultFeature = countriesData.features.find(
-      f => f.properties.admin === 'Italy'
-    );
-
-    if (defaultFeature) {
-      const defaultLayer = countriesLayer
-        .getLayers()
-        .find(l => l.feature === defaultFeature);
-      selectCountry(defaultFeature, defaultLayer);
-    }
   });
-
+ 
 // ==============================
 // GEOMETRY HELPERS
 // ==============================
@@ -141,29 +182,25 @@ function getMainlandCentroid(feature) {
 
   return turf.centroid(feature).geometry.coordinates;
 }
-
+  
 // ==============================
 // COUNTRY SELECTION
 // ==============================
 function selectCountry(feature, layer) {
-  if (selectedCountryLayer) {
-    selectedCountryLayer.setStyle(Styles.country.default);
+  if (selectedCountries.length === 2) {
+    resetSelection();
   }
+  selectedCountries.push({
+    distanceSlider: distanceSliders[selectedCountries.length] ,
+    distanceValue: distanceValues[selectedCountries.length],
+    feature, 
+    layer,
+    ring:null
+  });
 
-  selectedCountryLayer = layer;
-  layer.setStyle(Styles.country.selected);
-
-  const centroid = getMainlandCentroid(feature);
-  selectedCenterLngLat = centroid;
-  selectedCenterLatLng = [centroid[1], centroid[0]];
-
-  centerMarker
-    .setLatLng(selectedCenterLatLng)
-    .setPopupContent(feature.properties.admin)
-    .openPopup();
-
-  drawRadius();
+  updateRings();
 }
+
 
 // ==============================
 // DISTANCE RING
@@ -186,53 +223,108 @@ function wrapToMap (feature) {
   return feature;
 }
 
-function drawRadius() {
-  if (!countriesData) return;
+function updateRings() {
+  const toleranceKm = Number(toleranceSlider.value);
+  toleranceValue.textContent=toleranceKm;
 
-  const km = Number(distanceSlider.value);
+  ringLayerGroup.clearLayers();
+
+  if (selectedCountries[0]) {
+    createRing(0);
+  }
+
+  if (selectedCountries[1]) {
+    createRing(1);
+  }
+
+  updateStyles();
+}
+
+function createRing(selectionIdx) {
+  const selectedCountry=selectedCountries[selectionIdx];
+    
+  const km = Number(selectedCountry.distanceSlider.value);
+  selectedCountry.distanceValue.textContent = km;
+
   const toleranceKm = Number(toleranceSlider.value);
 
-  distanceValue.textContent = km;
-  toleranceValue.textContent = toleranceKm;
+  const centroid = getMainlandCentroid(selectedCountry.feature);
+  const selectedLatLong = [centroid[1], centroid[0]];
 
-  const center = turf.point(selectedCenterLngLat);
+  const marker = L.marker(selectedLatLong)
+    .bindPopup(selectedCountry.feature.properties.admin)
+    .addTo(ringLayerGroup)
+    .openPopup();
+
+  const center = turf.point(centroid);
 
   const ring = turf.difference(
-    wrapToMap(turf.circle(center, km + toleranceKm, { units: 'kilometers', steps:1024 })),
-    wrapToMap(turf.circle(center, km, { units: 'kilometers', steps:1024 }))
+    turf.circle(center, km + toleranceKm, { units: 'kilometers'}),
+    turf.circle(center, km - toleranceKm, { units: 'kilometers' })
   );
 
-// Remove previous threshold visualization
-if (thresholdLayer) {
-  map.removeLayer(thresholdLayer);
+
+  // Draw threshold ring
+  L.geoJSON(ring, {
+    style: Styles.ring[selectionIdx]
+  }).addTo(ringLayerGroup);
+
+  selectedCountry.ring = ring;
 }
 
-// Draw threshold ring
-thresholdLayer = L.geoJSON(ring, {
-  style: {
-    color: '#ff8800',
-    weight: 2,
-    fillColor: '#ff8800',
-    fillOpacity: 0.15,
-    dashArray: '6,4',
-    interactive: false
-  }
-}).addTo(map);
-
+// ---------------------------
+// Styling logic
+// ---------------------------
+function updateStyles() {
   countriesLayer.eachLayer(layer => {
-    if (layer === selectedCountryLayer) {
+    if (selectedCountries[0] && layer === selectedCountries[0].layer){
       return;
     }
-    const isMatch = turf.booleanIntersects(ring, layer.feature);
-    layer.setStyle(isMatch ? Styles.country.match : Styles.country.default);
+
+    if (selectedCountries[1] && layer === selectedCountries[1].layer){
+      return;
+    }
+    const feature = layer.feature;
+
+    const hitA = selectedCountries[0] && turf.booleanIntersects(selectedCountries[0].ring, feature);
+    const hitB = selectedCountries[1] && turf.booleanIntersects(selectedCountries[1].ring, feature);
+
+    if (hitA && hitB) {
+      layer.setStyle({
+        color: '#fff',
+        weight: 2,
+        fill: 'url(#hatch-orange-purple)',
+        fillOpacity: 1
+      });
+    } else if (hitA) {
+      layer.setStyle(Styles.country.selected);
+    } else if (hitB) {
+      layer.setStyle(Styles.country.selectedB);
+    } else {
+      layer.setStyle(Styles.country.default);
+    }
   });
 }
+
+// ---------------------------
+// Reset
+// ---------------------------
+function resetSelection() {
+  ringLayerGroup.clearLayers();
+  selectedCountries = [];
+  countriesLayer.eachLayer(layer => {
+    layer.setStyle(Styles.country.default);
+  });
+}
+
 
 // ==============================
 // CONTROL EVENTS
 // ==============================
-distanceSlider.addEventListener('input', drawRadius);
-toleranceSlider.addEventListener('input', drawRadius);
+distanceSliders.forEach( (distanceSlider) => {
+  distanceSlider.addEventListener('input', updateRings);
+})
+toleranceSlider.addEventListener('input', updateRings);
 
 zoomInBtn.addEventListener('click', e => {
   e.preventDefault();

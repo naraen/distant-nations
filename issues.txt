@@ -2,7 +2,7 @@ Issues
 --------
 - Cannot click on Marshall Islands,  Kiribati etc.
 - increasing distance on the left edge or right edge does not expand to the other edge
-
+-  hatch pattern for countries intersecting both rings is black in color
 
 Wishlist
 --------
@@ -18,6 +18,8 @@ Wishlist
 * host it somewhere
 * show lat long lines
 * should not select self. 
+* change this file to markdown
+
 
 Learning
 --------
@@ -25,6 +27,8 @@ Learning
 * Take the time to learn leaflet
 * Take the time to learn openstreetmap
 - WGS84 format
+- Why does setting fill:null on the style for the layer, prevent the click event from firing.
+- Learn how to use markers.   Why does only marker show a tooltip
 
 Resources
 ---------

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Countries at Distance</title>
+  <meta charset="UTF-8" />
+  <title>Distant Nations</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -15,15 +15,21 @@
   <!-- Controls panel -->
   <div id="controls">
     <label>
-      Distance (km) :
+      Distance1 (km) :
       <input type="range" id="distanceSlider" min="500" max="14000" step="500" value="1000">
-      <span id="distanceValue"></span> km
+      <span id="distanceValue">1000</span> km
+    </label>
+
+        <label>
+      Distance2 (km) :
+      <input type="range" id="distanceSliderB" min="500" max="14000" step="500" value="1000">
+      <span id="distanceValueB">1000</span> km
     </label>
 
     <label>
       Tolerance (± km):
       <input type="range" id="toleranceSlider" min="10" max="100" step="5" value="25">
-      <span id="toleranceValue"></span> km
+      <span id="toleranceValue">25</span> km
     </label>
   </div>
 

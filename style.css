@@ -1,6 +1,12 @@
 /* ==============================
    GLOBAL
 ============================== */
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -15,6 +21,15 @@ body {
   height: 100%;
   width: 100%;
 }
+
+/* Country base style */
+.country {
+  fill: #cccccc;
+  fill-opacity: 0.15;
+  stroke: #666;
+  stroke-width: 1;
+}
+
 
 /* ==============================
    CONTROL PANEL
@@ -44,6 +59,7 @@ body {
 }
 
 #distanceValue,
+#distanceValueB,
 #toleranceValue {
   font-weight: bold;
   margin-left: 6px;
@@ -128,4 +144,18 @@ body {
     transform: translateX(-50%);
     top: 130px;
   }
+}
+
+
+/* Ring styles */
+.ring-a {
+  stroke: #ff8800;
+  stroke-width: 2;
+  fill: none;
+}
+
+.ring-b {
+  stroke: #8a2be2;
+  stroke-width: 2;
+  fill: none;
 }
