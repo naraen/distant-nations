@@ -52,7 +52,7 @@ function addHatchPatterns(){
   if (svgElem) {
     return;
   }
-  console.log(58)
+  
   svgElem = document.createElementNS('http://www.w3.org/2000/svg','svg')
 	document.body.appendChild(svgElem);
   
