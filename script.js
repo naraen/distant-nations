@@ -38,7 +38,54 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
   noWrap: true
 }).addTo(map);
+ 
 
+
+// ---------------------------
+// SVG hatch pattern
+// ---------------------------
+const hatchPatternName = 'intersectionHatch';
+
+function addHatchPatterns(){
+  
+  let svgElem = document.querySelector('#svgForFillPatterns');
+  if (svgElem) {
+    return;
+  }
+  console.log(58)
+  svgElem = document.createElementNS('http://www.w3.org/2000/svg','svg')
+	document.body.appendChild(svgElem);
+  
+  const fillPattern = `<svg id="svgForFillPatterns" width="0" height="0" style="position:absolute">
+        <defs>
+            <pattern id="intersectionHatch" 
+              x="0" 
+              y="0" 
+              width="8" 
+              height="8" 
+              patternUnits="userSpaceOnUse"
+              patternContentUnits="userSpaceOnUse" 
+              patternTransform="rotate(45)"
+              >
+                <path stroke="orange" stroke-width="4" d="M0 2h8"></path>
+                <path stroke="#8a2be2" stroke-width="4" d="M0 6h8"></path>
+            </pattern>
+        </defs>
+    </svg>`
+  svgElem.outerHTML=fillPattern;
+
+  const styleDefinition = `<style>
+        .intersectionHatch {
+            fill: url("#intersectionHatch");
+        }
+    </style>`;
+
+  let styleElem = document.createElement('style');
+	document.body.appendChild(styleElem);
+	styleElem.outerHTML = styleDefinition;
+}
+
+addHatchPatterns();
 
 // ==============================
 // STYLE CONSTANTS (LOGICAL ONLY)
@@ -48,7 +95,7 @@ const Styles = {
     default: { color: '#777', weight: 1, fillOpacity: 0.1 },
     selected: { color: 'orange', weight: 3, fillOpacity: 0.3 },
     selectedB: { color: '#8a2be2', weight: 2, fillOpacity: 0.4},
-    match: { color: 'blue', weight: 2, fillOpacity: 0.4 }
+    hatched: { className:hatchPatternName, fillOpacity: .7, opacity: .4, weight: 1 },
   },
   ring:[
     {
@@ -98,36 +145,6 @@ const Styles = {
     interactive: false
   }
 };
-
-// ---------------------------
-// SVG hatch pattern
-// ---------------------------
-
-function addHatchPatterns(map) {
-  const svg = map.getPanes().overlayPane.querySelector('svg');
-  if (!svg) return;
-
-  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-
-  defs.innerHTML = `
-    <pattern id="hatch-orange-purple"
-             width="8" height="8"
-             patternUnits="userSpaceOnUse"
-             patternTransform="rotate(45)">
-      <line x1="0" y1="0" x2="0" y2="8"
-            stroke="#ff8800"
-            stroke-width="3" />
-      <line x1="4" y1="0" x2="4" y2="8"
-            stroke="#8a2be2"
-            stroke-width="3" />
-    </pattern>
-  `;
-
-  svg.insertBefore(defs, svg.firstChild);
-}
-
-map.whenReady(() => addHatchPatterns(map));
-
 
 // ==============================
 // MARKERS & LAYERS
@@ -275,6 +292,20 @@ function createRing(selectionIdx) {
 // ---------------------------
 // Styling logic
 // ---------------------------
+function removeHatchClass(layer){
+      let currClassName = layer._path.getAttribute('class');
+      if (currClassName.indexOf(hatchPatternName) > -1){
+        layer._path.setAttribute('class', currClassName.replace(hatchPatternName + ' ',''));
+      }
+}
+
+function addHatchClass(layer) {
+      let currClassName = layer._path.getAttribute('class');
+      if (currClassName.indexOf(hatchPatternName) === -1){
+        layer._path.setAttribute('class', hatchPatternName + ' ' + currClassName);
+      }
+}
+
 function updateStyles() {
   countriesLayer.eachLayer(layer => {
     if (selectedCountries[0] && layer === selectedCountries[0].layer){
@@ -290,17 +321,16 @@ function updateStyles() {
     const hitB = selectedCountries[1] && turf.booleanIntersects(selectedCountries[1].ring, feature);
 
     if (hitA && hitB) {
-      layer.setStyle({
-        color: '#444',
-        weight: 2,
-        fill: 'url(#hatch-orange-purple)',
-        fillOpacity: 1
-      });
+      addHatchClass(layer);
+      layer.setStyle(Styles.country.hatched);
     } else if (hitA) {
+      removeHatchClass(layer);
       layer.setStyle(Styles.country.selected);
     } else if (hitB) {
+      removeHatchClass(layer);
       layer.setStyle(Styles.country.selectedB);
     } else {
+      removeHatchClass(layer);
       layer.setStyle(Styles.country.default);
     }
   });
