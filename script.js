@@ -38,14 +38,20 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
   noWrap: true
 }).addTo(map);
- 
+
 
 
 // ---------------------------
 // SVG hatch pattern
 // ---------------------------
 const hatchPatternName = 'intersectionHatch';
+/*
+This approach is inspired by plugin  https://github.com/samanbey/leaflet-hatchclass
 
+The variation adopted, uses fillColor instead of injecting a css class & referencing it in the style object 
+using className attribute.   This is more consistent across the code, since className cannot be changed
+through leafletjs once the layer is rendered. 
+*/
 function addHatchPatterns(){
   
   let svgElem = document.querySelector('#svgForFillPatterns');
@@ -73,16 +79,6 @@ function addHatchPatterns(){
         </defs>
     </svg>`
   svgElem.outerHTML=fillPattern;
-
-  const styleDefinition = `<style>
-        .intersectionHatch {
-            fill: url("#intersectionHatch");
-        }
-    </style>`;
-
-  let styleElem = document.createElement('style');
-	document.body.appendChild(styleElem);
-	styleElem.outerHTML = styleDefinition;
 }
 
 addHatchPatterns();
@@ -92,10 +88,10 @@ addHatchPatterns();
 // ==============================
 const Styles = {
   country: {
-    default: { color: '#777', weight: 1, fillOpacity: 0.1 },
-    selected: { color: 'orange', weight: 3, fillOpacity: 0.3 },
-    selectedB: { color: '#8a2be2', weight: 2, fillOpacity: 0.4},
-    hatched: { className:hatchPatternName, fillOpacity: .7, opacity: .4, weight: 1 },
+    default: { fillColor:'', color: '#777', weight: 1, fillOpacity: 0.1 },
+    selected: { fillColor:'', color: 'orange', weight: 3, fillOpacity: 0.3 },
+    selectedB: { fillColor:'', color: '#8a2be2', weight: 2, fillOpacity: 0.4},
+    hatched: { fillColor: 'url("#intersectionHatch")', fillOpacity: .7, opacity: .4, weight: 1 },
   },
   ring:[
     {
@@ -115,11 +111,6 @@ const Styles = {
       interactive: false
     }
   ],
-  radius: {
-    color: 'red',
-    fillOpacity: 0,
-    interactive: false
-  },
   grid: {
     color: '#999',
     weight: 1,
@@ -292,20 +283,6 @@ function createRing(selectionIdx) {
 // ---------------------------
 // Styling logic
 // ---------------------------
-function removeHatchClass(layer){
-      let currClassName = layer._path.getAttribute('class');
-      if (currClassName.indexOf(hatchPatternName) > -1){
-        layer._path.setAttribute('class', currClassName.replace(hatchPatternName + ' ',''));
-      }
-}
-
-function addHatchClass(layer) {
-      let currClassName = layer._path.getAttribute('class');
-      if (currClassName.indexOf(hatchPatternName) === -1){
-        layer._path.setAttribute('class', hatchPatternName + ' ' + currClassName);
-      }
-}
-
 function updateStyles() {
   countriesLayer.eachLayer(layer => {
     if (selectedCountries[0] && layer === selectedCountries[0].layer){
@@ -321,16 +298,12 @@ function updateStyles() {
     const hitB = selectedCountries[1] && turf.booleanIntersects(selectedCountries[1].ring, feature);
 
     if (hitA && hitB) {
-      addHatchClass(layer);
       layer.setStyle(Styles.country.hatched);
     } else if (hitA) {
-      removeHatchClass(layer);
       layer.setStyle(Styles.country.selected);
     } else if (hitB) {
-      removeHatchClass(layer);
       layer.setStyle(Styles.country.selectedB);
     } else {
-      removeHatchClass(layer);
       layer.setStyle(Styles.country.default);
     }
   });
