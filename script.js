@@ -161,7 +161,7 @@ fetch('countries.geojson')
     }).addTo(map);
 
   });
- 
+
 // ==============================
 // GEOMETRY HELPERS
 // ==============================
@@ -213,22 +213,31 @@ function selectCountry(feature, layer) {
 // ==============================
 // DISTANCE RING
 // ==============================
-function crossesAntimeridian(feature) {
+function wrapToMap(feature) {
+    const bbox = turf.polygon([
+    [
+      [-180,90],
+      [180,90],
+      [180,-90],
+      [-180,-90],
+      [-180,90]
+    ]
+  ])
+
   const [minX, , maxX] = turf.bbox(feature);
-  return minX < -180 || maxX > 180;
-}
+  if (minX >= -180 && maxX <= 180) return feature;
 
-function wrapToMap (feature) {
-  if (!crossesAntimeridian(feature)) return feature;
-  
-  const coords = feature.geometry.coordinates[0];
+  let withinBounds = turf.intersect(feature, bbox);
 
-  coords.forEach( coord => {
-    if (coord[0] > 180) coord[0] = coord[0] - 360;
-    if (coord[0] < -180) coord[0] = coord[0] + 360;
-  } )
+  let outOfBounds = turf.difference(feature, bbox);
+  const coords = outOfBounds.geometry.coordinates[0];
 
-  return feature;
+  coords.forEach(coord => {
+    if (maxX > 180) coord[0] = coord[0] - 360;
+    if (minX < -180) coord[0] = coord[0] + 360;
+  })
+
+  return turf.union(withinBounds, outOfBounds);   
 }
 
 function updateRings() {
@@ -271,9 +280,8 @@ function createRing(selectionIdx) {
     turf.circle(center, km - toleranceKm, { units: 'kilometers' })
   );
 
-
   // Draw threshold ring
-  L.geoJSON(ring, {
+  L.geoJSON(wrapToMap(ring), {
     style: Styles.ring[selectionIdx]
   }).addTo(ringLayerGroup);
 
@@ -407,6 +415,7 @@ addGraticule(10, 10);
 fetch('latitude-lines.geojson')
   .then(res => res.json())
   .then(data => {
+
     L.geoJSON(data, {
       style: feature => Styles[feature.properties.type],
       onEachFeature: (feature, layer) => {
