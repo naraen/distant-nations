@@ -13,23 +13,18 @@
 <body>
 
   <!-- Controls panel -->
-  <div id="controls">
-    <label>
-      Distance1 (km) :
+  <div id="controls" class="hidden">
+    <label class="hidden">
       <input type="range" id="distanceSlider" min="500" max="14000" step="500" value="1000">
-      <span id="distanceValue">1000</span> km
+      <span class="sliderA"><span id="distanceValue">1000</span> km</span>
     </label>
-
-        <label>
-      Distance2 (km) :
+    <label class="hidden">
       <input type="range" id="distanceSliderB" min="500" max="14000" step="500" value="1000">
-      <span id="distanceValueB">1000</span> km
+      <span class="sliderB"><span id="distanceValueB">1000</span> km</span>
     </label>
-
-    <label>
-      Tolerance (± km):
+    <label class="hidden">
       <input type="range" id="toleranceSlider" min="10" max="100" step="5" value="25">
-      <span id="toleranceValue">25</span> km
+      ± <span id="toleranceValue">25</span> km
     </label>
   </div>
 

@@ -44,7 +44,7 @@ Wishlist
   - Show missed countries in red
 * Future project
   - This person was not able to get her projec working via github pages. https://github.com/kathleengraham/visualizing-global-data-with-leaflet-js?tab=readme-ov-file.   Get it working  
-
+* Buy domain cartofilia.com.  Host on cloudflare
 
 Learning
 --------

@@ -276,8 +276,8 @@ function createRing(selectionIdx) {
   const center = turf.point(centroid);
 
   const ring = turf.difference(
-    turf.circle(center, km + toleranceKm, { units: 'kilometers'}),
-    turf.circle(center, km - toleranceKm, { units: 'kilometers' })
+    turf.circle(center, km + toleranceKm, { units: 'kilometers'}, 1024),
+    turf.circle(center, km - toleranceKm, { units: 'kilometers' }, 1024)
   );
 
   // Draw threshold ring
@@ -292,6 +292,16 @@ function createRing(selectionIdx) {
 // Styling logic
 // ---------------------------
 function updateStyles() {
+  if (selectedCountries.length>0){
+    document.getElementById('controls').classList.remove('hidden');
+    document.getElementById('toleranceSlider').parentElement.classList.remove('hidden');
+    document.getElementById('distanceSlider').parentElement.classList.remove('hidden');
+  }
+
+  if (selectedCountries.length===2){
+    document.getElementById('distanceSliderB').parentElement.classList.remove('hidden');  
+  }
+
   countriesLayer.eachLayer(layer => {
     if (selectedCountries[0] && layer === selectedCountries[0].layer){
       return;
@@ -321,6 +331,12 @@ function updateStyles() {
 // Reset
 // ---------------------------
 function resetSelection() {
+  document.getElementById('controls').classList.add('hidden');
+  document.getElementById('toleranceSlider').parentElement.classList.add('hidden');
+  document.getElementById('distanceSlider').parentElement.classList.add('hidden');
+  document.getElementById('distanceSliderB').parentElement.classList.add('hidden');  
+  
+    
   ringLayerGroup.clearLayers();
   selectedCountries = [];
   countriesLayer.eachLayer(layer => {
