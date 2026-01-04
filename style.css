@@ -17,23 +17,26 @@ body {
 }
 
 #app-header {
-  height: 50px;
-  background: #1f2933;
-  color: #ffffff;
+  height: 64px;
+  background: #e6ebf1;
+  color: #1f2933;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  font-size: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  padding: 0 20px;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   z-index: 2000;
-  position: sticky;
-  top: 0;
+  border-bottom: 5px solid #cfd8dc;
+
 }
 
+
 .app-title {
-  font-weight: bold;
+  font-size: 18px;
+  font-weight: 600;
 }
+
 
 #app-main {
   position: relative;
@@ -50,6 +53,93 @@ body {
   align-items: center;
   justify-content: center;
   border-top: 1px solid #ccc;
+}
+
+.help-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #9aa5b1;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.help-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #1f2933;
+  fill: none;
+  stroke-width: 2;
+}
+
+.help-btn:hover {
+  background: #1f2933;
+}
+
+.help-btn:hover .help-icon {
+  stroke: #ffffff;
+}
+
+/* ==============================
+   HELP PANEL
+============================== */
+#help-panel {
+  position: fixed;
+  top: 64px; /* same as header height */
+  right: 0;
+  width: 320px;
+  height: calc(100vh - 64px);
+  background: #ffffff;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+}
+
+#help-panel.open {
+  transform: translateX(0);
+}
+
+#help-panel.hidden {
+  transform: translateX(100%);
+}
+
+/* Header */
+.help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  background: #f5f7fa;
+}
+
+.help-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Close button */
+#help-close {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Content */
+.help-content {
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-y: auto;
 }
 
 
@@ -80,7 +170,7 @@ body {
   background: rgba(255, 255, 255, 0.95);
   padding: 10px 14px;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
 
@@ -92,7 +182,7 @@ body {
 }
 
 #controls label.hidden {
-  display:none;
+  display: none;
 }
 
 #controls input[type="range"] {
@@ -119,12 +209,13 @@ body {
 }
 
 input#distanceSlider {
-  accent-color:orange;
+  accent-color: orange;
 }
 
-input#distanceSliderB{
-  accent-color:#8a2be2;
+input#distanceSliderB {
+  accent-color: #8a2be2;
 }
+
 #distanceValue,
 #distanceValueB,
 #toleranceValue {
@@ -133,11 +224,13 @@ input#distanceSliderB{
 }
 
 .sliderA {
-  color:orange;
+  color: orange;
 }
+
 .sliderB {
-  color:#8a2be2;
+  color: #8a2be2;
 }
+
 /* ==============================
    CUSTOM ZOOM CONTROL
 ============================== */
@@ -152,7 +245,7 @@ input#distanceSliderB{
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
 

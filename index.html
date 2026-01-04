@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Distant Nations</title>
+  <title>Kartograffy - Distant Nations</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -10,15 +11,27 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <header id="app-header">
-    <div class="header-left">
-      <span class="app-title">Distance Explorer</span>
+    <div class="header-spacer"></div>
+
+    <div class="header-center">
+      <span class="app-title">Country Distance Explorer</span>
     </div>
-    <nav class="header-menu">
-      <!-- future menu items -->
-    </nav>
+
+    <div class="header-spacer"> <button class="help-btn" title="Help" aria-label="Help">
+        <svg class="help-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16.5v-1.2" />
+          <path d="M12 7.5a3 3 0 0 1 2.5 1.5
+             2.7 2.7 0 0 1-1.5 3.7
+             c-.8.4-1 1-1 1.8" />
+        </svg>
+      </button>
+    </div>
   </header>
+
   <main id="app-main">
 
     <!-- Leaflet map container -->
@@ -35,11 +48,11 @@
         <span class="sliderB"><span id="distanceValueB">1000</span> km</span>
       </label>
       <label class="hidden">
-      <input type="range" id="toleranceSlider" min="10" max="100" step="5" value="25">
+        <input type="range" id="toleranceSlider" min="10" max="100" step="5" value="25">
         ± <span id="toleranceValue">25</span> km
       </label>
     </div>
-   
+
     <!-- Custom zoom control -->
     <div id="customZoomControl" class="custom-zoom-control leaflet-bar">
       <a href="#" id="zoomIn" class="leaflet-control-zoom-in">+</a>
@@ -49,8 +62,30 @@
   </main>
   <footer id="app-footer">
     © 2025 NK Software Systems ·
-    <a href="mailto:contact@example.com">Contact</a>
+    <a href="mailto:contact@example.com">Submit Feedback</a>
   </footer>
+
+  <aside id="help-panel">
+    <div class="help-header">
+      <h2>Help</h2>
+    </div>
+
+    <div class="help-content">
+      <p><strong>How to use the map</strong></p>
+      <ul>
+        <li>Click a country to select it</li>
+        <li>Adjust distance and tolerance sliders</li>
+        <li>Highlighted countries meet the distance criteria</li>
+      </ul>
+
+      <p><strong>Tips</strong></p>
+      <ul>
+        <li>Zoom to refine selection</li>
+        <li>Hover to see country names</li>
+      </ul>
+    </div>
+  </aside>
+
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -60,4 +95,5 @@
   <!-- Custom JS -->
   <script src="script.js"></script>
 </body>
+
 </html>

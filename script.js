@@ -22,7 +22,7 @@ const zoomDisplay = document.querySelector('.zoom-display');
 // ==============================
 const italyLatLng = [41.9028, 12.4964];
 let selectedCountries = [
-  ];
+];
 
 const worldBounds = L.latLngBounds(
   [-85, -180],  // south-west
@@ -32,7 +32,7 @@ const worldBounds = L.latLngBounds(
 const map = L.map('map', {
   zoomControl: false,
   worldCopyJump: false,
-  minZoom:2, 
+  minZoom: 2,
   maxBounds: worldBounds,
   maxBoundsViscosity: 1.0
 }).setView(italyLatLng, 4);
@@ -58,16 +58,16 @@ The variation adopted, uses fillColor instead of injecting a css class & referen
 using className attribute.   This is more consistent across the code, since className cannot be changed
 through leafletjs once the layer is rendered. 
 */
-function addHatchPatterns(){
-  
+function addHatchPatterns() {
+
   let svgElem = document.querySelector('#svgForFillPatterns');
   if (svgElem) {
     return;
   }
-  
-  svgElem = document.createElementNS('http://www.w3.org/2000/svg','svg')
-	document.body.appendChild(svgElem);
-  
+
+  svgElem = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  document.body.appendChild(svgElem);
+
   const fillPattern = `<svg id="svgForFillPatterns" width="0" height="0" style="position:absolute">
         <defs>
             <pattern id="intersectionHatch" 
@@ -84,7 +84,7 @@ function addHatchPatterns(){
             </pattern>
         </defs>
     </svg>`
-  svgElem.outerHTML=fillPattern;
+  svgElem.outerHTML = fillPattern;
 }
 
 addHatchPatterns();
@@ -94,12 +94,12 @@ addHatchPatterns();
 // ==============================
 const Styles = {
   country: {
-    default: { fillColor:'', color: '#777', weight: 1, fillOpacity: 0.1 },
-    selected: { fillColor:'', color: '#ff8800', weight: 3, fillOpacity: 0.3 },
-    selectedB: { fillColor:'', color: '#8a2be2', weight: 2, fillOpacity: 0.4},
+    default: { fillColor: '', color: '#777', weight: 1, fillOpacity: 0.1 },
+    selected: { fillColor: '', color: '#ff8800', weight: 3, fillOpacity: 0.3 },
+    selectedB: { fillColor: '', color: '#8a2be2', weight: 2, fillOpacity: 0.4 },
     hatched: { fillColor: 'url("#intersectionHatch")', fillOpacity: .7, opacity: .4, weight: 1 },
   },
-  ring:[
+  ring: [
     {
       color: '#ff8800',
       weight: 2,
@@ -109,7 +109,7 @@ const Styles = {
       interactive: false
     },
     {
-      color:'#8a2be2',
+      color: '#8a2be2',
       weight: 2,
       fillColor: '#8a2be2',
       fillOpacity: 0.15,
@@ -196,7 +196,7 @@ function getMainlandCentroid(feature) {
 
   return turf.centroid(feature).geometry.coordinates;
 }
-  
+
 // ==============================
 // COUNTRY SELECTION
 // ==============================
@@ -205,11 +205,11 @@ function selectCountry(feature, layer) {
     resetSelection();
   }
   selectedCountries.push({
-    distanceSlider: distanceSliders[selectedCountries.length] ,
+    distanceSlider: distanceSliders[selectedCountries.length],
     distanceValue: distanceValues[selectedCountries.length],
-    feature, 
+    feature,
     layer,
-    ring:null
+    ring: null
   });
 
   updateRings();
@@ -220,13 +220,13 @@ function selectCountry(feature, layer) {
 // DISTANCE RING
 // ==============================
 function wrapToMap(feature) {
-    const bbox = turf.polygon([
+  const bbox = turf.polygon([
     [
-      [-180,90],
-      [180,90],
-      [180,-90],
-      [-180,-90],
-      [-180,90]
+      [-180, 90],
+      [180, 90],
+      [180, -90],
+      [-180, -90],
+      [-180, 90]
     ]
   ])
 
@@ -243,12 +243,12 @@ function wrapToMap(feature) {
     if (minX < -180) coord[0] = coord[0] + 360;
   })
 
-  return turf.union(withinBounds, outOfBounds);   
+  return turf.union(withinBounds, outOfBounds);
 }
 
 function updateRings() {
   const toleranceKm = Number(toleranceSlider.value);
-  toleranceValue.textContent=toleranceKm;
+  toleranceValue.textContent = toleranceKm;
 
   ringLayerGroup.clearLayers();
 
@@ -264,8 +264,8 @@ function updateRings() {
 }
 
 function createRing(selectionIdx) {
-  const selectedCountry=selectedCountries[selectionIdx];
-    
+  const selectedCountry = selectedCountries[selectionIdx];
+
   const km = Number(selectedCountry.distanceSlider.value);
   selectedCountry.distanceValue.textContent = km;
 
@@ -282,7 +282,7 @@ function createRing(selectionIdx) {
   const center = turf.point(centroid);
 
   const ring = turf.difference(
-    turf.circle(center, km + toleranceKm, { units: 'kilometers'}, 1024),
+    turf.circle(center, km + toleranceKm, { units: 'kilometers' }, 1024),
     turf.circle(center, km - toleranceKm, { units: 'kilometers' }, 1024)
   );
 
@@ -298,22 +298,22 @@ function createRing(selectionIdx) {
 // Styling logic
 // ---------------------------
 function updateStyles() {
-  if (selectedCountries.length>0){
+  if (selectedCountries.length > 0) {
     document.getElementById('controls').classList.remove('hidden');
     document.getElementById('toleranceSlider').parentElement.classList.remove('hidden');
     document.getElementById('distanceSlider').parentElement.classList.remove('hidden');
   }
 
-  if (selectedCountries.length===2){
-    document.getElementById('distanceSliderB').parentElement.classList.remove('hidden');  
+  if (selectedCountries.length === 2) {
+    document.getElementById('distanceSliderB').parentElement.classList.remove('hidden');
   }
 
   countriesLayer.eachLayer(layer => {
-    if (selectedCountries[0] && layer === selectedCountries[0].layer){
+    if (selectedCountries[0] && layer === selectedCountries[0].layer) {
       return;
     }
 
-    if (selectedCountries[1] && layer === selectedCountries[1].layer){
+    if (selectedCountries[1] && layer === selectedCountries[1].layer) {
       return;
     }
     const feature = layer.feature;
@@ -340,9 +340,9 @@ function resetSelection() {
   document.getElementById('controls').classList.add('hidden');
   document.getElementById('toleranceSlider').parentElement.classList.add('hidden');
   document.getElementById('distanceSlider').parentElement.classList.add('hidden');
-  document.getElementById('distanceSliderB').parentElement.classList.add('hidden');  
-  
-    
+  document.getElementById('distanceSliderB').parentElement.classList.add('hidden');
+
+
   ringLayerGroup.clearLayers();
   selectedCountries = [];
   countriesLayer.eachLayer(layer => {
@@ -354,7 +354,7 @@ function resetSelection() {
 // ==============================
 // CONTROL EVENTS
 // ==============================
-distanceSliders.forEach( (distanceSlider) => {
+distanceSliders.forEach((distanceSlider) => {
   distanceSlider.addEventListener('input', updateRings);
 })
 toleranceSlider.addEventListener('input', updateRings);
@@ -369,11 +369,21 @@ zoomOutBtn.addEventListener('click', e => {
   map.zoomOut();
 });
 
+
 map.on('zoomend', () => {
   zoomDisplay.textContent = map.getZoom();
 });
 
 zoomDisplay.textContent = map.getZoom();
+
+const helpBtn = document.querySelector('.help-btn');
+const helpPanel = document.getElementById('help-panel');
+
+function toggleHelp() {
+  helpPanel.classList.toggle('open');
+}
+
+helpBtn.addEventListener('click', toggleHelp);
 
 // ==============================
 // GRATICULE
@@ -431,7 +441,7 @@ function addGraticule(latInterval = 10, lngInterval = 10) {
   }
 }
 
-addGraticule(10, 10); 
+addGraticule(10, 10);
 
 
 fetch('latitude-lines.geojson')

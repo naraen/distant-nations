@@ -5,11 +5,11 @@ Issues
   - [ ] Marshall Islands
   - [ ] Kiribati
   - [ ] Grenada 
-  - [ ] Bermuda
+  - [ ] Barbados
   - [ ] Grenada
   - [ ] St. Vincent & the Grenadines
   - [ ] Saint Lucia
-  - [ ] Domenica
+  - [ ] Dominica
   - [ ] St. Kitts and Nevis
   - [ ] Antigua & Barbuda
   - [ ] Cabo Verde
@@ -71,3 +71,12 @@ For new icons - google search (marker icon maps)
 - https://osiris-indoor.github.io/index.html.   Create map for indoor buildings
 - https://overpass-turbo.eu/ to write a query and generate geojson
 - https://www.freemaptools.com/convert-us-zip-code-to-lat-lng.htm
+Sites for getting coutnry geojson
+  - Natural Earth
+  - Geodata source
+  - OSM
+  - GADM
+  - SimpleMaps
+
+
+a
