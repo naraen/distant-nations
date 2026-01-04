@@ -11,33 +11,46 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header id="app-header">
+    <div class="header-left">
+      <span class="app-title">Distance Explorer</span>
+    </div>
+    <nav class="header-menu">
+      <!-- future menu items -->
+    </nav>
+  </header>
+  <main id="app-main">
 
-  <!-- Controls panel -->
-  <div id="controls" class="hidden">
-    <label class="hidden">
-      <input type="range" id="distanceSlider" min="500" max="14000" step="500" value="1000">
-      <span class="sliderA"><span id="distanceValue">1000</span> km</span>
-    </label>
-    <label class="hidden">
-      <input type="range" id="distanceSliderB" min="500" max="14000" step="500" value="1000">
-      <span class="sliderB"><span id="distanceValueB">1000</span> km</span>
-    </label>
-    <label class="hidden">
+    <!-- Leaflet map container -->
+    <div id="map"></div>
+
+    <!-- Controls panel -->
+    <div id="controls" class="hidden">
+      <label class="hidden">
+        <input type="range" id="distanceSlider" min="500" max="14000" step="500" value="1000">
+        <span class="sliderA"><span id="distanceValue">1000</span> km</span>
+      </label>
+      <label class="hidden">
+        <input type="range" id="distanceSliderB" min="500" max="14000" step="500" value="1000">
+        <span class="sliderB"><span id="distanceValueB">1000</span> km</span>
+      </label>
+      <label class="hidden">
       <input type="range" id="toleranceSlider" min="10" max="100" step="5" value="25">
-      ± <span id="toleranceValue">25</span> km
-    </label>
-  </div>
-
-  <!-- Leaflet map container -->
-  <div id="map"></div>
-
-  <!-- Custom zoom control -->
-  <div id="customZoomControl" class="custom-zoom-control leaflet-bar">
-    <a href="#" id="zoomIn" class="leaflet-control-zoom-in">+</a>
-    <span id="zoomDisplay" class="zoom-display">4</span>
-    <a href="#" id="zoomOut" class="leaflet-control-zoom-out">−</a>
-  </div>
-
+        ± <span id="toleranceValue">25</span> km
+      </label>
+    </div>
+   
+    <!-- Custom zoom control -->
+    <div id="customZoomControl" class="custom-zoom-control leaflet-bar">
+      <a href="#" id="zoomIn" class="leaflet-control-zoom-in">+</a>
+      <span id="zoomDisplay" class="zoom-display">4</span>
+      <a href="#" id="zoomOut" class="leaflet-control-zoom-out">−</a>
+    </div>
+  </main>
+  <footer id="app-footer">
+    © 2025 NK Software Systems ·
+    <a href="mailto:contact@example.com">Contact</a>
+  </footer>
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 

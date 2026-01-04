@@ -59,6 +59,7 @@ Learning
 - Learn how to draw insets & zoom
 - What is a rhumb line (concept)
 - Cesium
+- https://freefrontend.com/css-range-sliders/ Ideas for range slider
 
 Resources
 ---------

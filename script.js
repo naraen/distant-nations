@@ -24,11 +24,17 @@ const italyLatLng = [41.9028, 12.4964];
 let selectedCountries = [
   ];
 
+const worldBounds = L.latLngBounds(
+  [-85, -180],  // south-west
+  [85, 180]     // north-east
+);
 
 const map = L.map('map', {
   zoomControl: false,
   worldCopyJump: false,
-  minZoom:2
+  minZoom:2, 
+  maxBounds: worldBounds,
+  maxBoundsViscosity: 1.0
 }).setView(italyLatLng, 4);
 
 let ringLayerGroup = L.layerGroup()
@@ -89,7 +95,7 @@ addHatchPatterns();
 const Styles = {
   country: {
     default: { fillColor:'', color: '#777', weight: 1, fillOpacity: 0.1 },
-    selected: { fillColor:'', color: 'orange', weight: 3, fillOpacity: 0.3 },
+    selected: { fillColor:'', color: '#ff8800', weight: 3, fillOpacity: 0.3 },
     selectedB: { fillColor:'', color: '#8a2be2', weight: 2, fillOpacity: 0.4},
     hatched: { fillColor: 'url("#intersectionHatch")', fillOpacity: .7, opacity: .4, weight: 1 },
   },
