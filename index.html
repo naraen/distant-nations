@@ -6,10 +6,10 @@
   <title>Cartograffy - Distant Nations</title>
 
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css">
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="src/style.css">
 </head>
 
 <body>
@@ -86,14 +86,8 @@
     </div>
   </aside>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Turf.js -->
-  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
-
   <!-- Custom JS -->
-  <script src="script.js"></script>
+  <script type="module" src="src/main.js"></script>
 </body>
 
 </html>

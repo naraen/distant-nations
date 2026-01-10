@@ -1,3 +1,22 @@
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow
+});
+
+import * as turf from '@turf/turf';
+import 'leaflet/dist/leaflet.css';
+import countriesData from './geo/countries.geo.json';
+import graticulesData from './geo/latitude-lines.geo.json';
+
+
 // ==============================
 // DOM ELEMENTS
 // ==============================
@@ -148,25 +167,18 @@ const Styles = {
 // ==============================
 
 let countriesLayer;
-let countriesData;
 
 // ==============================
 // LOAD COUNTRIES
 // ==============================
-fetch('countries.geojson')
-  .then(res => res.json())
-  .then(data => {
-    countriesData = data;
+  countriesLayer = L.geoJSON(countriesData, {
+    style: Styles.country.default,
+    onEachFeature: (feature, layer) => {
+      layer.on('click', () => selectCountry(feature, layer));
+      layer.bindTooltip(feature.properties.admin, { sticky: true });
+    }
+  }).addTo(map);
 
-    countriesLayer = L.geoJSON(countriesData, {
-      style: Styles.country.default,
-      onEachFeature: (feature, layer) => {
-        layer.on('click', () => selectCountry(feature, layer));
-        layer.bindTooltip(feature.properties.admin, { sticky: true });
-      }
-    }).addTo(map);
-
-  });
 
 // ==============================
 // GEOMETRY HELPERS
@@ -233,9 +245,9 @@ function wrapToMap(feature) {
   const [minX, , maxX] = turf.bbox(feature);
   if (minX >= -180 && maxX <= 180) return feature;
 
-  let withinBounds = turf.intersect(feature, bbox);
+  let withinBounds = turf.intersect(turf.featureCollection([feature, bbox]));
 
-  let outOfBounds = turf.difference(feature, bbox);
+  let outOfBounds = turf.difference(turf.featureCollection([feature, bbox]));
   const coords = outOfBounds.geometry.coordinates[0];
 
   coords.forEach(coord => {
@@ -243,7 +255,7 @@ function wrapToMap(feature) {
     if (minX < -180) coord[0] = coord[0] + 360;
   })
 
-  return turf.union(withinBounds, outOfBounds);
+  return turf.union(turf.featureCollection([withinBounds, outOfBounds]));
 }
 
 function updateRings() {
@@ -263,6 +275,7 @@ function updateRings() {
   updateStyles();
 }
 
+
 function createRing(selectionIdx) {
   const selectedCountry = selectedCountries[selectionIdx];
 
@@ -281,9 +294,11 @@ function createRing(selectionIdx) {
 
   const center = turf.point(centroid);
 
-  const ring = turf.difference(
-    turf.circle(center, km + toleranceKm, { units: 'kilometers' }, 1024),
-    turf.circle(center, km - toleranceKm, { units: 'kilometers' }, 1024)
+  
+  const ring = turf.difference(turf.featureCollection([
+    turf.circle(center, km + toleranceKm, { units: 'kilometers' }, 32),
+    turf.circle(center, km - toleranceKm, { units: 'kilometers' }, 32)
+  ])
   );
 
   // Draw threshold ring
@@ -444,17 +459,12 @@ function addGraticule(latInterval = 10, lngInterval = 10) {
 addGraticule(10, 10);
 
 
-fetch('latitude-lines.geojson')
-  .then(res => res.json())
-  .then(data => {
+L.geoJSON(graticulesData, {
+  style: feature => Styles[feature.properties.type],
+  onEachFeature: (feature, layer) => {
+    const lat = feature.geometry.coordinates[0][1];
 
-    L.geoJSON(data, {
-      style: feature => Styles[feature.properties.type],
-      onEachFeature: (feature, layer) => {
-        const lat = feature.geometry.coordinates[0][1];
+    addLatitudeLabel(lat, feature.properties.label);
 
-        addLatitudeLabel(lat, feature.properties.label);
-
-      }
-    }).addTo(graticuleLayer);
-  });
+  }
+}).addTo(graticuleLayer);
