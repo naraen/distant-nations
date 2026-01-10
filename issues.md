@@ -21,7 +21,7 @@ Issues
 - [x] Portions of the threshold ring that overflow the antimeridian, should wrap around to the other side.
 - [x] Countries in the intersection of the two rings is black in color instead of a hatch pattern
 - [ ] how to do automated tests for validating functionality
-- [ ] Prevent page from scrolling past map area.  Currently page pans part map and shows a light gray background.
+- [x] Prevent page from scrolling past map area.  Currently page pans part map and shows a light gray background.
 - [ ] Clicking on an already selected country should deselect it
 
 Wishlist
@@ -77,6 +77,16 @@ Sites for getting coutnry geojson
   - OSM
   - GADM
   - SimpleMaps
-
-
-a
+- Learn to use jq for editing the geojson file
+```
+jq '{ 
+    type,  
+    features : (.features | map({
+    type ,                                               
+    properties : {
+      admin : .properties.admin,
+    }, 
+    geometry
+ }))
+}' countries.geo.json > out.json
+```    
