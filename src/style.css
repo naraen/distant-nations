@@ -325,3 +325,7 @@ input#distanceSliderB {
   stroke-width: 2;
   fill: none;
 }
+
+#version {
+  color:#f4f4f4
+}

@@ -16,6 +16,12 @@ import 'leaflet/dist/leaflet.css';
 import countriesData from './geo/countries.geo.json';
 import graticulesData from './geo/latitude-lines.geo.json';
 
+// ==============================
+// SITE VERSION
+// ==============================
+const versionEl = document.getElementById('version');
+versionEl.textContent = 'v'+ __APP_VERSION__;
+
 
 // ==============================
 // DOM ELEMENTS
@@ -28,6 +34,7 @@ const distanceValues = [
   document.getElementById('distanceValue'),
   document.getElementById('distanceValueB')
 ];
+
 
 const toleranceSlider = document.getElementById('toleranceSlider');
 const toleranceValue = document.getElementById('toleranceValue');

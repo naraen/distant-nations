@@ -13,5 +13,10 @@ export default defineConfig({
         drop_debugger: true
       }
     }
+  },
+  define: {
+    __APP_VERSION__: JSON.stringify(
+      new Date().toISOString().replace(/[-:]/g, '').replace(/T/, '.').substring(0,14)
+    )
   }
 });
