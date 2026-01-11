@@ -20,6 +20,7 @@ jobs:
         with:
           name: dist
           path: dist
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
