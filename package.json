@@ -28,7 +28,6 @@
     "dev": "vite",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-
     "build": "vite build",
     "preview": "vite preview"
   },
