@@ -2,7 +2,7 @@ import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
+import { buildDistanceRing, wrapToMap } from './js/geometry';
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -238,32 +238,7 @@ function selectCountry(feature, layer) {
 // ==============================
 // DISTANCE RING
 // ==============================
-function wrapToMap(feature) {
-  const bbox = turf.polygon([
-    [
-      [-180, 90],
-      [180, 90],
-      [180, -90],
-      [-180, -90],
-      [-180, 90]
-    ]
-  ])
 
-  const [minX, , maxX] = turf.bbox(feature);
-  if (minX >= -180 && maxX <= 180) return feature;
-
-  let withinBounds = turf.intersect(turf.featureCollection([feature, bbox]));
-
-  let outOfBounds = turf.difference(turf.featureCollection([feature, bbox]));
-  const coords = outOfBounds.geometry.coordinates[0];
-
-  coords.forEach(coord => {
-    if (maxX > 180) coord[0] = coord[0] - 360;
-    if (minX < -180) coord[0] = coord[0] + 360;
-  })
-
-  return turf.union(turf.featureCollection([withinBounds, outOfBounds]));
-}
 
 function updateRings() {
   const toleranceKm = Number(toleranceSlider.value);
@@ -299,14 +274,7 @@ function createRing(selectionIdx) {
     .addTo(ringLayerGroup)
     .openPopup();
 
-  const center = turf.point(centroid);
-
-  
-  const ring = turf.difference(turf.featureCollection([
-    turf.circle(center, km + toleranceKm, { units: 'kilometers' }, 32),
-    turf.circle(center, km - toleranceKm, { units: 'kilometers' }, 32)
-  ])
-  );
+  const ring = buildDistanceRing(centroid, km, toleranceKm)
 
   // Draw threshold ring
   L.geoJSON(wrapToMap(ring), {
